@@ -1,26 +1,71 @@
 import fs from "fs";
+import { entries } from "lodash";
 
 export const chooseRandom = (array, number) => {
-  // TODO implement chooseRandom
-  if (array.length === 0 || array.length === 1) {
+  if (array.length < 2) {
     return array;
   }
-  if (array.length > 1) {
-    let arr = [];
-    for (let i = 0; i < number; i++) {
-      let numItems = array[i];
-      arr.push(numItems);
-    }
-    return arr;
+
+  if (number < 2 || number > array.length) {
+    number = array.length;
   }
+
+  let arr = [], i, numItems;
+  for (i = 0; i < number; i++) {
+    numItems = array[i];
+    arr.push(numItems);
+  }
+  return arr;
 };
 
-export const createPrompt = () => {
-  // TODO implement createPrompt
+export const createPrompt = (numQuestions) => {
+  let nq, nc;
+  if (numQuestions && numQuestions.numQuestions !== undefined) {
+    nq = numQuestions.numQuestions;
+  } else {
+    nq = 1;
+  }
+  
+  if (numQuestions && numQuestions.numChoices !== undefined) {
+    nc = numQuestions.numChoices;
+  } else {
+    nc = 2;
+  }
+
+  let arr = [], i, j;
+  for (i = 1; i <= nq; i++) {
+    arr.push({
+      type: "input",
+      name: `question-${i}`,
+      message: `Enter question ${i}`,
+    });
+    for (j = 1; j <= nc; j++) {
+      arr.push({
+        type: "input",
+        name: `question-${i}-choice-${j}`,
+        message: `Enter answer choice ${j} for question ${i}`,
+      });
+    }
+  }
+  return arr;
 };
 
-export const createQuestions = () => {
-  // TODO implement createQuestions
+export const createQuestions = (questions) => {
+  let arr = [], key, q;
+  for (key in questions) {
+    if (key.indexOf(`-choice-`) !== -1) {
+      q.choices.push(questions[key]);
+    } else {
+      q = {
+        type: "list",
+        name: key,
+        message: questions[key],
+        choices: [],
+      };
+      arr.push(q);
+    }
+  }
+  return arr;
 };
 
 export const readFile = (path) =>
