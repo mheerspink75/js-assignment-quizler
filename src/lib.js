@@ -8,7 +8,7 @@ export const chooseRandom = (array, numItems) => {
   if (numItems < 2 || numItems > array.length) {
     numItems = Math.floor((Math.random() * array.length) + 2);
   }
-  return array.slice(0, numItems).sort((a, b) => 0.5 - Math.random());
+  return array.slice(0, numItems).sort(() => 0.5 - Math.random());
 };
 
 export const createPrompt = (numQuestions) => {
