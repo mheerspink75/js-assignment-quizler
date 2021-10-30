@@ -1,21 +1,14 @@
 import fs from "fs";
 import { entries } from "lodash";
 
-export const chooseRandom = (array, number) => {
+export const chooseRandom = (array, numItems) => {
   if (array.length < 2) {
     return array;
   }
-
-  if (number < 2 || number > array.length) {
-    number = array.length;
+  if (numItems < 2 || numItems > array.length) {
+    numItems = 2;
   }
-
-  let arr = [], i, numItems;
-  for (i = 0; i < number; i++) {
-    numItems = array[i];
-    arr.push(numItems);
-  }
-  return arr;
+  return array.slice(0, numItems).sort((a, b) => 0.5 - Math.random());
 };
 
 export const createPrompt = (numQuestions) => {
@@ -25,14 +18,16 @@ export const createPrompt = (numQuestions) => {
   } else {
     nq = 1;
   }
-  
+
   if (numQuestions && numQuestions.numChoices !== undefined) {
     nc = numQuestions.numChoices;
   } else {
     nc = 2;
   }
 
-  let arr = [], i, j;
+  let arr = [],
+    i,
+    j;
   for (i = 1; i <= nq; i++) {
     arr.push({
       type: "input",
@@ -51,7 +46,9 @@ export const createPrompt = (numQuestions) => {
 };
 
 export const createQuestions = (questions) => {
-  let arr = [], key, q;
+  let arr = [],
+    key,
+    q;
   for (key in questions) {
     if (key.indexOf(`-choice-`) !== -1) {
       q.choices.push(questions[key]);
